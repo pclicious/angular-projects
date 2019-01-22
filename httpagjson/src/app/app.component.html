@@ -1,0 +1,12 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    Welcome to {{ title }}!
+  </h1>
+  {{todaydate}}
+  <ul *ngFor = "let data of httpdata" style="list-style-type:none">
+    <li >Name : {{data.name}}, Address: {{data.address.city}}, Username: {{data.username}}, Email: {{data.email}}</li>
+ </ul>
+ {{name}}
+</div>
+
