@@ -1,0 +1,82 @@
+<h1>Expense CRUD Application</h1>
+<!-- --------------------------------------------------------------------------------------------------------- -->
+<h3 *ngIf="articleIdToUpdate; else create"> 
+   Update Expense Data for SSN: {{articleIdToUpdate}}
+</h3>
+<ng-template #create>
+   <h3> Create New Expense Record </h3>
+</ng-template>
+<!-- --------------------------------------------------------------------------------------------------------- -->
+
+<div>
+ <!-- <form [formGroup]="articleForm" (ngSubmit)="onArticleFormSubmit()"> -->
+    <form [formGroup]="articleForm">
+  <table>
+    <tr *ngIf="!articleIdToUpdate"><td>Enter SSN:</td><td><input formControlName="SSN">
+	         <label *ngIf="articleForm.get('SSN').invalid && processValidation" [ngClass] = "'error'"> SSN is required. </label>
+        </td></tr>
+    <tr *ngIf="articleIdToUpdate"><td>Enter SSN:</td><td><input formControlName="SSN" disabled="disabled">
+          <label *ngIf="articleForm.get('SSN').invalid && processValidation" [ngClass] = "'error'"> SSN is required. </label>
+        </td></tr>
+    <tr><td>Enter Rent Amount:</td><td><input formControlName="Rent">
+	       <label *ngIf="articleForm.get('Rent').invalid && processValidation" [ngClass] = "'error'"> Rent Amount is required. </label>
+    </td></tr>	
+    <tr><td>Enter Maid Amount:</td><td><input formControlName="Maid">
+      <label *ngIf="articleForm.get('Maid').invalid && processValidation" [ngClass] = "'error'"> Maid Amount is required. </label>
+    </td></tr>
+    <tr><td>Enter Travelling Amount:</td><td><input formControlName="Travelling">
+      <label *ngIf="articleForm.get('Travelling').invalid && processValidation" [ngClass] = "'error'"> Travelling Amount is required. </label>
+    </td></tr>
+    <tr><td>Enter Grocery Amount:</td><td><input formControlName="Grocery">
+      <label *ngIf="articleForm.get('Grocery').invalid && processValidation" [ngClass] = "'error'"> Grocery Amount is required. </label>
+    </td></tr>
+    <tr><td>Enter Investment Amount:</td><td><input formControlName="Investment">
+      <label *ngIf="articleForm.get('Investment').invalid && processValidation" [ngClass] = "'error'"> Investment Amount is required. </label>
+    </td></tr>
+    <tr><td>Enter PersonalExpense Amount:</td><td><input formControlName="PersonalExpense">
+      <label *ngIf="articleForm.get('PersonalExpense').invalid && processValidation" [ngClass] = "'error'"> PersonalExpense Amount is required. </label>
+    </td></tr>  
+    <tr><td colspan="2">
+	    <button *ngIf="!articleIdToUpdate" (click)="createExpense()">CREATE</button>  
+		<button *ngIf="articleIdToUpdate" (click)="updateExpense()">UPDATE</button>  
+	    <button (click)="backToCreateArticle()" *ngIf="articleIdToUpdate">Go Back</button>  
+	</td></tr>
+  </table>
+ </form> 
+ <br/>
+ <!-- ----------------------------------------------------------------------------- -->
+ <div *ngIf="statusCode; else processing">
+   <div *ngIf="statusCode === 200 && expenseCreate === true" [ngClass] = "'success'">
+	    Expense added successfully.
+   </div>   
+   <div *ngIf="statusCode === 409" [ngClass] = "'success'">
+      Expense already exists.
+   </div>   	
+   <div *ngIf="statusCode === 200 && expenseCreate === false" [ngClass] = "'success'">
+      Expense updated successfully.
+   </div>   	      
+   <div *ngIf="statusCode === 204" [ngClass] = "'success'">
+      Expense deleted successfully.
+   </div>   	   
+   <div *ngIf="statusCode === 500" [ngClass] = "'error'">
+        Internal Server Error.
+   </div>	
+ </div>
+ <ng-template #processing>
+	<img *ngIf="requestProcessing" src="assets/images/loading.gif">
+ </ng-template>
+</div>
+<!-- ------------------------------------------------------------------------------------ -->
+<h3>Expense Details</h3>
+<table>
+  <tr>
+      <td colspan="9">Search by SSN: <input type="text" [(ngModel)]="term">
+      </td>
+  </tr>
+  <tr><th>SSN</th><th> Rent</th> <th>Maid</th><th>Travelling</th><th>Grocery</th><th>Investment</th><th>PersonalExpense</th><th></th><th></th></tr>
+  <tr *ngFor="let article of allExpenses |filter:term" >
+    <td>{{article.SSN}}</td><td>{{article.Rent | currency:'&#8377;'}}</td> <td>{{article.Maid | currency:'&#8377;'}}</td> <td>{{article.Travelling | currency:'&#8377;'}}</td><td>{{article.Grocery | currency:'&#8377;'}}</td><td>{{article.Investment | currency:'&#8377;'}}</td><td>{{article.PersonalExpense | currency:'&#8377;'}}</td>
+	<td><button type="button" (click)="loadArticleToEdit(article.SSN)">Edit</button> </td> 
+	<td><button type="button" (click)="deleteArticle(article.SSN)">Delete</button></td>
+  </tr>
+</table>
